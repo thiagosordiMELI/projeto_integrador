@@ -1,161 +1,93 @@
-# Projeto_Integrador
-API REST desenvolvida pelo grupo Beta Campers para o Projeto Integrador feito durante o IT Bootcamp Backend Java (wave 6). 
+# Projeto_Integrador - Requisito 6
+Requisito 6 com base na API REST desenvolvida pelo grupo Beta Campers para o Projeto Integrador feito durante o IT Bootcamp Backend Java (wave 6). 
 
-## Autores
-<a href="https://github.com/vfreitasmeli">
-  <img src="https://avatars.githubusercontent.com/u/107959338?s=50&v=4" style="width: 50px">
-</a>
-<a href="https://github.com/brunavottri">
-  <img src="https://avatars.githubusercontent.com/u/108009877?s=120&v=4" style="width: 50px">
-</a>
-<a href="https://github.com/pealmeida-meli">
-  <img src="https://avatars.githubusercontent.com/u/108008922?s=120&v=4" style="width: 50px">
-</a>
+## Autor
 <a href="https://github.com/thiagosordiMELI">
   <img src="https://avatars.githubusercontent.com/u/108008559?s=120&v=4" style="width: 50px">
-</a>
-<a href="https://github.com/bdonadel">
-  <img src="https://avatars.githubusercontent.com/u/108012641?s=120&v=4" style="width: 50px">
-</a>
-<a href="https://github.com/felipeticiani-meli">
-  <img src="https://avatars.githubusercontent.com/u/108010964?s=120&v=4" style="width: 50px">
 </a>
 
 # Sumário
 
-- [Observações](#observações)
+- [Detalhes](#detalhes)
+- [Desafios encontrados](#Desafios encontrados)
 - [Funcionalidades](#funcionalidades)
 - <a href="https://app.diagrams.net/#G1X_05jbEF7Yt2yFOZ2y3OfKW_KCPjm5MC">Diagrama UML </a>
 - [Inbound Order](#inboundOrder)
   - [Post - Cria uma nova entrada do pedido](#createInboundOrder)
   - [Put - Atualiza entrada do pedido](#putInboundOrder)
+  
+# Detalhes
+
+Para esse requisito os representantes podem adicionar armazéns e conectá-los por rotas. Para isso foi utilizado um banco NoSQL orientado a grafos.
+<br><br>O banco escolhido é o Neo4J rodando em um container Docker o 
+qual a aplicação tem acesso através de uma dependência de dados do Spring.
+<br><br>São estipulados os modelos dos nós do grafo (Armazém e Rota).
+<br><br>O objetivo final é para que o comprador consiga visualizar o tempo estimado de entrega.
+<br><br>O modelo de compra (PurchaseOrder) agora contem um armazém de entrega (simplificação equivalente ao endereço do cliente).
+
+# Desafios encontrados
+
+*Testes de integração envolvendo o banco de grafos teve algumas complicações com a Response.
+<br><br>*A ideia era que calculasse a rota mais rápida passando por todos armazens contendo itens da compra.
+Porém essa parte de passar por nós obrigatórios não funcionou muito bem.
+Então simplesmente retorna o menor caminho entre um armazem inicial e o de entrega.
+
 
 # Funcionalidades
 
-## Inbound Order <br name="inboundOrder">
+## Responsável <br name="responsavel">
 
-`POST /api/v1/fresh-products/inboundorder` <br name="createInboundOrder">
-Cria uma nova entrada do pedido.
+`POST /api/v1/warehouse` <br name="createWarehouse">
+Cria um novo Armazém.
 <pre><code><b>Payload Example:</b>
 {
-  "sectionCode": 1,
-  "batchStock": [
-          {
-            "productId": 1,
-            "currentTemperature":20,
-            "minimumTemperature": 15,
-            "initialQuantity": 10,
-            "currentQuantity": 7,
-            "manufacturingDate": "2021-12-31",
-            "manufacturingTime": "2021-12-31T00:00:00",
-            "dueDate": "2022-12-31"
-            "productPrice": 22.50
-         },
-          {
-            "productId": 2,
-            "currentTemperature":19,
-            "minimumTemperature": 16,
-            "initialQuantity": 20,
-            "currentQuantity": 13,
-            "manufacturingDate": "2022-06-16",
-            "manufacturingTime": "2022-06-16T22:16:23",
-            "dueDate": "2022-07-01",
-            "productPrice": 7.90
-         },
-   ]
- }
+    "location": "Fortaleza"
+}
+
  
  <b>Response:</b>
-  "batchStock": [
-          {
-            "productId": 1,
-            "currentTemperature":20,
-            "minimumTemperature": 15,
-            "initialQuantity": 10,
-            "currentQuantity": 7,
-            "manufacturingDate": "2021-12-31",
-            "manufacturingTime": "2021-12-31 00:00:00",
-            "dueDate": "2022-12-31"
-            "productPrice": 22.50
-         },
-          {
-            "productId": 2,
-            "currentTemperature":19,
-            "minimumTemperature": 16,
-            "initialQuantity": 20,
-            "currentQuantity": 13,
-            "manufacturingDate": "2022-06-16",
-            "manufacturingTime": "2022-06-16 22:16:23",
-            "dueDate": "2022-07-01",
-            "productPrice": 7.90
-         },
-   ]
+  [
+      {
+          "warehouseCode": 13,
+          "location": "Fortaleza",
+          "routes": []
+      }
+  ]
  
  </code></pre>
  
- `PUT /api/v1/fresh-products/inboundorder` <br name="putInboundOrder">
-Atualiza entrada do pedido.
+ `POST /api/v1/route/create-route` <br name="createRoute">
+ Cria uma nova Rota.
 <pre><code><b>Payload Example:</b>
 {
-  "sectionCode": 1,
-  "batchStock": [
-          {
-            "productId": 1,
-            "currentTemperature":20,
-            "minimumTemperature": 15,
-            "initialQuantity": 10,
-            "currentQuantity": 7,
-            "manufacturingDate": "2021-12-31",
-            "manufacturingTime": "2021-12-31T00:00:00",
-            "dueDate": "2022-12-31"
-            "productPrice": 22.50
-         },
-          {
-            "productId": 2,
-            "currentTemperature":19,
-            "minimumTemperature": 16,
-            "initialQuantity": 20,
-            "currentQuantity": 13,
-            "manufacturingDate": "2022-06-16",
-            "manufacturingTime": "2022-06-16T22:16:23",
-            "dueDate": "2022-07-01",
-            "productPrice": 7.90
-         },
-   ]
- }
+    "from": 13,
+    "destination": 7,
+    "duration": 15
+}
  
  <b>Response:</b>
-  "batchStock": [
-          {
-            "productId": 1,
-            "currentTemperature":20,
-            "minimumTemperature": 15,
-            "initialQuantity": 10,
-            "currentQuantity": 7,
-            "manufacturingDate": "2021-12-31",
-            "manufacturingTime": "2021-12-31 00:00:00",
-            "dueDate": "2022-12-31"
-            "productPrice": 22.50
-         },
-          {
-            "productId": 2,
-            "currentTemperature":19,
-            "minimumTemperature": 16,
-            "initialQuantity": 20,
-            "currentQuantity": 13,
-            "manufacturingDate": "2022-06-16",
-            "manufacturingTime": "2022-06-16 22:16:23",
-            "dueDate": "2022-07-01",
-            "productPrice": 7.90
-         },
-   ]
+  [
+      {
+          "id": "73fc9bb9-8c91-4b6b-9660-59cac8326bb3",
+          "from": "Fortaleza",
+          "destination": "Porto Alegre",
+          "duration": 15.0
+      }
+  ]
  
  </code></pre>
- - Será validado se:<br>
-  - Todos os campos não estão vazios
-  - O código do setor, id do produto, e preço do produto são positivos
-  - Se a lista "batchStock" não está vazia
-  - Se a data de fabricação e a data de vencimento estão no formato dd-MM-yyyy
-  - Se a hora de fabricação está no formato dd-MM-yyyy HH:mm:ss
-  - Se a data e hora de fabricação e a data de vencimento são posteriores a data de criação
 
+## Comprador <br name="comprador">
+
+`GET /api/v1/warehouse/{purchaseOrderId}/delivery-estimated` <br name="getBestRoute">
+Retorna tempo estimado da entrega.
+<pre><code><b>Payload Example:</b>
+ 
+ <b>Response:</b>
+  {
+      "from": "Belo Horizonte",
+      "to": "Farroupilha",
+      "totalInTime": 17.0
+  }
+ </code></pre>
+ 
