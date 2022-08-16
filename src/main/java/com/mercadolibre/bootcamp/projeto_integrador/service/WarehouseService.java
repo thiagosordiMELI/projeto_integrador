@@ -55,7 +55,7 @@ public class WarehouseService implements IWarehouseService{
             throw new UnauthorizedBuyerException(buyerId, purchaseId);
         }
 
-        final Flux<PathValue> rows = warehouseNodeRepository.shortestPath("São Paulo", purchaseOrder.getWarehouse().getLocation());
+        final Flux<PathValue> rows = warehouseNodeRepository.shortestPath("Belo Horizonte", purchaseOrder.getWarehouse().getLocation());
         return rows
                 .map(it -> this.convertTimePath(it.asPath()))
                 .take(1)
