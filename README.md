@@ -10,6 +10,7 @@ Requisito 6 com base na API REST desenvolvida pelo grupo Beta Campers para o Pro
 
 - [Detalhes](#detalhes)
 - [Desafios encontrados](#desafios)
+- [Primeira vez](#first)
 - [Funcionalidades](#funcionalidades)
 - <a href="https://app.diagrams.net/#G1X_05jbEF7Yt2yFOZ2y3OfKW_KCPjm5MC">Diagrama UML </a>
 - [Responsável](#responsavel)
@@ -34,6 +35,17 @@ qual a aplicação tem acesso através de uma dependência de dados do Spring.
 Porém essa parte de passar por nós obrigatórios não funcionou muito bem.
 Então simplesmente retorna o menor caminho entre um armazem inicial e o de entrega.
 
+# Primeira vez <br name="first">
+
+Entrar na pasta do projeto pelo terminal e executar o comando 
+
+<pre><code>
+docker-compose up -d
+ </code></pre>
+
+para subir o container que roda o Neo4J.
+
+E para acessar o Dashboard oferecido pelo Neo4j basta acessar <a href="http://localhost:7474/">Dashboard</a> e digitar as credenciais conforme especificadas no arquivo application.properties (nome do banco é neo4j).
 
 # Funcionalidades
 
