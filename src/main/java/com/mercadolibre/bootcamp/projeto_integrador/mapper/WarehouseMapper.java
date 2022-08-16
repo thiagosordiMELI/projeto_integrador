@@ -33,13 +33,4 @@ public class WarehouseMapper {
 
         return warehouseResponse;
     }
-
-    /*public List<WarehouseResponse> mapWarehouseListToWarehouseResponseList(final List<Mono<WarehouseNode>> warehouseList) {
-        return warehouseList != null
-                ? warehouseList
-                .stream()
-                .map(this::mapFromWarehouseToWarehouseResponse)
-                .collect(Collectors.toList())
-                : null;
-    }*/
 }

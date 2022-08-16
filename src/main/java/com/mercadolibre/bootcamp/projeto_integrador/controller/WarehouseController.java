@@ -1,8 +1,6 @@
 package com.mercadolibre.bootcamp.projeto_integrador.controller;
 
-import com.mercadolibre.bootcamp.projeto_integrador.dto.PathRequestDto;
 import com.mercadolibre.bootcamp.projeto_integrador.dto.WarehouseRequestDto;
-import com.mercadolibre.bootcamp.projeto_integrador.payload.PathShortestConnectionResponse;
 import com.mercadolibre.bootcamp.projeto_integrador.payload.PathShortestTimeResponse;
 import com.mercadolibre.bootcamp.projeto_integrador.payload.WarehouseResponse;
 import com.mercadolibre.bootcamp.projeto_integrador.service.IWarehouseService;
@@ -25,24 +23,9 @@ public class WarehouseController {
         return ResponseEntity.status(HttpStatus.CREATED).body(warehouseService.save(warehouseRequestDto));
     }
 
+    @GetMapping("/{purchaseId}/shortest-path")
+    public Mono<PathShortestTimeResponse>  getShortestPath(@PathVariable(value = "purchaseId") long purchaseId) {
 
-    @GetMapping("/shortest-path")
-    public Mono<PathShortestConnectionResponse> getShortestPath(@RequestBody PathRequestDto pathRequest) {
-
-        return warehouseService.getShortestPath(pathRequest.getFrom(), pathRequest.getDestination());
-    }
-
-    @GetMapping("/shortest-path-in-time")
-    public Mono<PathShortestTimeResponse>  getShortestPathInTime(@RequestBody PathRequestDto pathRequest) {
-
-        return warehouseService.getShortestPathInTime(pathRequest.getFrom(), pathRequest.getDestination());
-    }
-
-    @ResponseStatus(
-            value = HttpStatus.NOT_FOUND,
-            reason = "Illegal arguments")
-    @ExceptionHandler(IllegalArgumentException.class)
-    public void illegalArgumentHandler() {
-
+        return warehouseService.getShortestPath(purchaseId);
     }
 }

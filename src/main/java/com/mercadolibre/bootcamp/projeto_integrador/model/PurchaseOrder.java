@@ -17,6 +17,10 @@ public class PurchaseOrder {
     private LocalDate date;
     private String orderStatus;
     @ManyToOne
+    @JoinColumn(name="warehouse_id", nullable = false)
+    @JsonIgnore
+    private Warehouse warehouse;
+    @ManyToOne
     @JoinColumn(name="buyer_id", nullable = false)
     @JsonIgnore
     private Buyer buyer;

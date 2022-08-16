@@ -1,11 +1,13 @@
 package com.mercadolibre.bootcamp.projeto_integrador.service;
 
 import com.mercadolibre.bootcamp.projeto_integrador.dto.WarehouseRequestDto;
+import com.mercadolibre.bootcamp.projeto_integrador.exceptions.NotFoundException;
 import com.mercadolibre.bootcamp.projeto_integrador.mapper.WarehouseMapper;
+import com.mercadolibre.bootcamp.projeto_integrador.model.PurchaseOrder;
 import com.mercadolibre.bootcamp.projeto_integrador.model.Warehouse;
-import com.mercadolibre.bootcamp.projeto_integrador.payload.PathShortestConnectionResponse;
 import com.mercadolibre.bootcamp.projeto_integrador.payload.PathShortestTimeResponse;
 import com.mercadolibre.bootcamp.projeto_integrador.payload.WarehouseResponse;
+import com.mercadolibre.bootcamp.projeto_integrador.repository.IPurchaseOrderRepository;
 import com.mercadolibre.bootcamp.projeto_integrador.repository.IWarehouseNodeRepository;
 import com.mercadolibre.bootcamp.projeto_integrador.repository.IWarehouseRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +28,8 @@ public class WarehouseService implements IWarehouseService{
 
     private final IWarehouseNodeRepository warehouseNodeRepository;
 
+    private final IPurchaseOrderRepository purchaseOrderRepository;
+
     private final WarehouseMapper warehouseMapper;
 
     @Override
@@ -36,25 +40,12 @@ public class WarehouseService implements IWarehouseService{
                 .map(warehouseNode -> warehouseMapper.mapFromWarehouseToWarehouseResponse(warehouseNode));
     }
 
-
     @Override
-    public Mono<PathShortestConnectionResponse> getShortestPath(String from, String to) {
+    public Mono<PathShortestTimeResponse> getShortestPath(long purchaseId) {
 
-        final Flux<PathValue> rows = warehouseNodeRepository.shortestPath(from, to);
-        return rows
-                .map(it -> this.convert(it.asPath()))
-                .take(1)
-                .next()
-                .switchIfEmpty(Mono.empty())
-                .map(PathShortestConnectionResponse::new)
-                .switchIfEmpty(Mono.error(new IllegalArgumentException("Error")));
+        PurchaseOrder purchaseOrder = purchaseOrderRepository.findById(purchaseId).orElseThrow(() -> new NotFoundException("Purchase Order"));
 
-    }
-
-    @Override
-    public Mono<PathShortestTimeResponse> getShortestPathInTime(String from, String to) {
-
-        final Flux<PathValue> rows = warehouseNodeRepository.shortestPathInTime(from, to);
+        final Flux<PathValue> rows = warehouseNodeRepository.shortestPath("São Paulo", purchaseOrder.getWarehouse().getLocation());
         return rows
                 .map(it -> this.convertTimePath(it.asPath()))
                 .take(1)
@@ -65,19 +56,10 @@ public class WarehouseService implements IWarehouseService{
     }
 
 
-    private PathShortestConnectionResponse convert(org.neo4j.driver.types.Path connection) {
-
-        String from = connection.start().get("name").asString();
-        String to = connection.end().get("name").asString();
-        int length = connection.length() - 1;
-
-        return new PathShortestConnectionResponse(from, to, length);
-    }
-
     private PathShortestTimeResponse convertTimePath(org.neo4j.driver.types.Path connection) {
 
-        String from = connection.start().get("name").asString();
-        String to = connection.end().get("name").asString();
+        String from = connection.start().get("location").asString();
+        String to = connection.end().get("location").asString();
         Double totalInTime = StreamSupport.stream(connection.nodes().spliterator(), false)
                 .filter(node -> node.hasLabel("Route"))
                 .mapToDouble(route -> route.get("duration").asDouble()).sum();
