@@ -81,7 +81,7 @@ public class RouteControllerTest extends BaseControllerTest {
     }
 
     @Test
-    void createWarehouse_returnsError_whenIsGivenAnInvalidInput() throws Exception {
+    void createRoute_returnsError_whenIsGivenAnInvalidInput() throws Exception {
         RouteRequestDto invalid = validRouteRequestDto;
         invalid.setFrom(0);
         mockMvc.perform(post("/api/v1/route/create-route")
