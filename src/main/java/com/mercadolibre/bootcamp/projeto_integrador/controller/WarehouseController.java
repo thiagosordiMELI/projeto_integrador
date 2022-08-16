@@ -7,19 +7,23 @@ import com.mercadolibre.bootcamp.projeto_integrador.service.IWarehouseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import javax.validation.Valid;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/warehouse")
+@Validated
 public class WarehouseController {
 
     private final IWarehouseService warehouseService;
 
     @PostMapping
-    public ResponseEntity<Flux<WarehouseResponse>> createWarehouse(@RequestBody WarehouseRequestDto warehouseRequestDto,
+    public ResponseEntity<Flux<WarehouseResponse>> createWarehouse(@RequestBody @Valid WarehouseRequestDto warehouseRequestDto,
                                                                    @RequestHeader("Manager-Id") long managerId) {
         return ResponseEntity.status(HttpStatus.CREATED).body(warehouseService.save(warehouseRequestDto, managerId));
     }

@@ -2,8 +2,7 @@ package com.mercadolibre.bootcamp.projeto_integrador.integration;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mercadolibre.bootcamp.projeto_integrador.dto.BatchRequestDto;
-import com.mercadolibre.bootcamp.projeto_integrador.dto.InboundOrderRequestDto;
+import com.mercadolibre.bootcamp.projeto_integrador.dto.*;
 import com.mercadolibre.bootcamp.projeto_integrador.model.*;
 import com.mercadolibre.bootcamp.projeto_integrador.repository.*;
 import com.mercadolibre.bootcamp.projeto_integrador.util.*;
@@ -35,6 +34,12 @@ public class BaseControllerTest {
     protected IBatchRepository batchRepository;
     @Autowired
     protected IInboundOrderRepository inboundOrderRepository;
+    @Autowired
+    protected IBatchPurchaseOrderRepository batchPurchaseOrderRepository;
+    @Autowired
+    protected IPurchaseOrderRepository purchaseOrderRepository;
+    @Autowired
+    protected IBuyerRepository buyerRepository;
 
     public BaseControllerTest() {
         objectMapper = new ObjectMapper();
@@ -46,6 +51,20 @@ public class BaseControllerTest {
         InboundOrderRequestDto requestDto = new InboundOrderRequestDto();
         requestDto.setBatchStock(List.of(batchRequest));
         requestDto.setSectionCode(section.getSectionCode());
+        return requestDto;
+    }
+
+    protected WarehouseRequestDto getValidWarehouseRequestDto(String location) {
+        WarehouseRequestDto requestDto = new WarehouseRequestDto();
+        requestDto.setLocation(location);
+        return requestDto;
+    }
+
+    protected RouteRequestDto getValidRouteRequestDto(long from, long destination, double duration) {
+        RouteRequestDto requestDto = new RouteRequestDto();
+        requestDto.setFrom(from);
+        requestDto.setDestination(destination);
+        requestDto.setDuration(duration);
         return requestDto;
     }
 
@@ -80,6 +99,13 @@ public class BaseControllerTest {
         BatchRequestDto batchRequest = BatchGenerator.newBatchRequestDTO();
         batchRequest.setProductId(productId);
         return batchRequest;
+    }
+
+    protected Buyer getSavedBuyer() {
+        Buyer buyer = new Buyer();
+        buyer.setUsername("Thiago");
+        buyerRepository.save(buyer);
+        return buyer;
     }
 
     protected Warehouse getSavedWarehouse() {
@@ -127,6 +153,28 @@ public class BaseControllerTest {
         Manager manager = ManagerGenerator.newManager();
         managerRepository.save(manager);
         return manager;
+    }
+
+    protected PurchaseOrder getSavedPurchaseOrder(Warehouse warehouse, Buyer buyer, List<Batch> batches) {
+        PurchaseOrder purchaseOrder = new PurchaseOrder();
+        purchaseOrder.setWarehouse(warehouse);
+        purchaseOrder.setDate(LocalDate.now());
+        purchaseOrder.setOrderStatus("Opened");
+        purchaseOrder.setBuyer(buyer);
+        purchaseOrderRepository.save(purchaseOrder);
+        for(Batch batch : batches){
+            getSavedBatchPurchaseOrder(batch, purchaseOrder);
+        }
+        return purchaseOrder;
+    }
+
+    protected BatchPurchaseOrder getSavedBatchPurchaseOrder(Batch batch, PurchaseOrder purchaseOrder) {
+        BatchPurchaseOrder batchPurchaseOrder = new BatchPurchaseOrder();
+        batchPurchaseOrder.setPurchaseOrder(purchaseOrder);
+        batchPurchaseOrder.setBatch(batch);
+        batchPurchaseOrder.setUnitPrice(new BigDecimal(12));
+        batchPurchaseOrder.setQuantity(5);
+        return batchPurchaseOrderRepository.save(batchPurchaseOrder);
     }
 
     protected InboundOrder getSavedInboundOrder(Section section) {
