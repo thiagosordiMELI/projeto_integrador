@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 @Data
@@ -11,10 +12,10 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 public class RouteRequestDto {
 
-    @NotNull(message = "From cant be null")
+    @Min(value = 1, message = "From cant be 0")
     private long from;
 
-    @NotNull(message = "Destination cant be null")
+    @Min(value = 1, message = "Destination cant be 0")
     private long destination;
 
     @NotNull(message = "Duration cant be null")

@@ -44,9 +44,6 @@ public class WarehouseControllerTest extends BaseControllerTest {
     private Buyer buyerUnauthorized;
     private PurchaseOrder purchaseOrder;
 
-    private InboundOrderRequestDto validInboundOrderRequest;
-    private InboundOrderRequestDto invalidInboundOrderRequest;
-
     private WarehouseRequestDto validWarehouseRequestDto;
 
     @BeforeEach

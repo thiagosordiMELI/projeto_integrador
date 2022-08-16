@@ -6,15 +6,18 @@ import com.mercadolibre.bootcamp.projeto_integrador.service.IRouteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/route")
+@Validated
 public class RouteController {
 
     private final IRouteService routeService;
@@ -32,7 +35,7 @@ public class RouteController {
     }
 
     @PostMapping(value = "/create-route")
-    public ResponseEntity<Flux<RouteResponse>> createRoute(@RequestBody RouteRequestDto routeDTO,
+    public ResponseEntity<Flux<RouteResponse>> createRoute(@RequestBody @Valid RouteRequestDto routeDTO,
                                                            @RequestHeader("Manager-Id") long managerId) {
 
         return ResponseEntity.status(HttpStatus.CREATED)
