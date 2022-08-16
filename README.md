@@ -9,12 +9,14 @@ Requisito 6 com base na API REST desenvolvida pelo grupo Beta Campers para o Pro
 # Sumário
 
 - [Detalhes](#detalhes)
-- [Desafios encontrados](#Desafios encontrados)
+- [Desafios encontrados](#desafios)
 - [Funcionalidades](#funcionalidades)
 - <a href="https://app.diagrams.net/#G1X_05jbEF7Yt2yFOZ2y3OfKW_KCPjm5MC">Diagrama UML </a>
-- [Inbound Order](#inboundOrder)
-  - [Post - Cria uma nova entrada do pedido](#createInboundOrder)
-  - [Put - Atualiza entrada do pedido](#putInboundOrder)
+- [Responsável](#responsavel)
+  - [Post - Cria um novo armazem](#createWarehouse)
+  - [Post - Cria uma nova rota](#createRoute)
+- [Comprador](#comprador)
+  - [Get - Tempo estimado de entrega](#getEstimatedTime)
   
 # Detalhes
 
@@ -25,7 +27,7 @@ qual a aplicação tem acesso através de uma dependência de dados do Spring.
 <br><br>O objetivo final é para que o comprador consiga visualizar o tempo estimado de entrega.
 <br><br>O modelo de compra (PurchaseOrder) agora contem um armazém de entrega (simplificação equivalente ao endereço do cliente).
 
-# Desafios encontrados
+# Desafios encontrados <br name="desafios">
 
 *Testes de integração envolvendo o banco de grafos teve algumas complicações com a Response.
 <br><br>*A ideia era que calculasse a rota mais rápida passando por todos armazens contendo itens da compra.
@@ -79,7 +81,7 @@ Cria um novo Armazém.
 
 ## Comprador <br name="comprador">
 
-`GET /api/v1/warehouse/{purchaseOrderId}/delivery-estimated` <br name="getBestRoute">
+`GET /api/v1/warehouse/{purchaseOrderId}/delivery-estimated` <br name="getEstimatedTime">
 Retorna tempo estimado da entrega.
 <pre><code><b>Payload Example:</b>
  
