@@ -20,25 +20,29 @@ public class RouteController {
     private final IRouteService routeService;
 
     @GetMapping("/{routeId}")
-    public ResponseEntity<Flux<RouteResponse>> getByRouteId(@PathVariable(value = "routeId") UUID routeId) {
-        return ResponseEntity.ok(routeService.getById(routeId));
+    public ResponseEntity<Flux<RouteResponse>> getByRouteId(@PathVariable(value = "routeId") UUID routeId,
+                                                            @RequestHeader("Manager-Id") long managerId) {
+        return ResponseEntity.ok(routeService.getById(routeId, managerId));
     }
 
     @GetMapping("/{warehouseCode}/routes")
-    public ResponseEntity<Flux<List<RouteResponse>>> getAllRoutes(@PathVariable(value = "warehouseCode") long warehouseCode){
-        return ResponseEntity.ok(routeService.listAllByWarehouseCode(warehouseCode));
+    public ResponseEntity<Flux<List<RouteResponse>>> getAllRoutes(@PathVariable(value = "warehouseCode") long warehouseCode,
+                                                                  @RequestHeader("Manager-Id") long managerId){
+        return ResponseEntity.ok(routeService.listAllByWarehouseCode(warehouseCode, managerId));
     }
 
     @PostMapping(value = "/create-route")
-    public ResponseEntity<Flux<RouteResponse>> createRoute(@RequestBody RouteRequestDto routeDTO) {
+    public ResponseEntity<Flux<RouteResponse>> createRoute(@RequestBody RouteRequestDto routeDTO,
+                                                           @RequestHeader("Manager-Id") long managerId) {
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(routeService.save(routeDTO));
+                .body(routeService.save(routeDTO, managerId));
     }
 
     @DeleteMapping("/{routeId}")
-    public ResponseEntity<String> deleteRoute(@PathVariable(value = "routeId") UUID routeId) {
-        routeService.delete(routeId);
+    public ResponseEntity<String> deleteRoute(@PathVariable(value = "routeId") UUID routeId,
+                                              @RequestHeader("Manager-Id") long managerId) {
+        routeService.delete(routeId, managerId);
         return ResponseEntity.ok("Route is deleted");
     }
 }

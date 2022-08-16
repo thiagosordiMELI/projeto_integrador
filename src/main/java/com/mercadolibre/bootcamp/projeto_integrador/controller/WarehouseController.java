@@ -19,13 +19,15 @@ public class WarehouseController {
     private final IWarehouseService warehouseService;
 
     @PostMapping
-    public ResponseEntity<Flux<WarehouseResponse>> createWarehouse(@RequestBody WarehouseRequestDto warehouseRequestDto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(warehouseService.save(warehouseRequestDto));
+    public ResponseEntity<Flux<WarehouseResponse>> createWarehouse(@RequestBody WarehouseRequestDto warehouseRequestDto,
+                                                                   @RequestHeader("Manager-Id") long managerId) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(warehouseService.save(warehouseRequestDto, managerId));
     }
 
-    @GetMapping("/{purchaseId}/shortest-path")
-    public Mono<PathShortestTimeResponse>  getShortestPath(@PathVariable(value = "purchaseId") long purchaseId) {
+    @GetMapping("/{purchaseId}/delivery-estimated")
+    public Mono<PathShortestTimeResponse>  getShortestPath(@PathVariable(value = "purchaseId") long purchaseId,
+                                                           @RequestHeader("Buyer-Id") long buyerId) {
 
-        return warehouseService.getShortestPath(purchaseId);
+        return warehouseService.getShortestPath(purchaseId, buyerId);
     }
 }

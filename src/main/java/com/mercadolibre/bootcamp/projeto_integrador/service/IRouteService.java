@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.UUID;
 
 public interface IRouteService {
-    Flux<List<RouteResponse>> listAllByWarehouseCode(long warehouseCode);
-    Flux<RouteResponse> getById(UUID routeId);
-    Flux<RouteResponse> save(RouteRequestDto routeDTO);
-    void delete(UUID routeId);
+    Flux<List<RouteResponse>> listAllByWarehouseCode(long warehouseCode, long managerId);
+    Flux<RouteResponse> getById(UUID routeId, long managerId);
+    Flux<RouteResponse> save(RouteRequestDto routeDTO, long managerId);
+    void delete(UUID routeId, long managerId);
 }

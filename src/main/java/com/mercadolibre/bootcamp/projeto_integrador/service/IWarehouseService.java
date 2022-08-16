@@ -8,6 +8,6 @@ import reactor.core.publisher.Mono;
 
 public interface IWarehouseService {
 
-    Flux<WarehouseResponse> save(WarehouseRequestDto warehouseRequestDto);
-    Mono<PathShortestTimeResponse> getShortestPath(long purchaseId);
+    Flux<WarehouseResponse> save(WarehouseRequestDto warehouseRequestDto, long managerId);
+    Mono<PathShortestTimeResponse> getShortestPath(long purchaseId, long buyerId);
 }
